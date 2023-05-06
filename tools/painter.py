@@ -107,7 +107,7 @@ def vis_add_mask(image, mask, color, alpha):
 	color = np.array(color_list[color])
 	mask = mask > 0.5
 	image[mask] = image[mask] * (1-alpha) + color * alpha
-	image.zero_()
+	image.fill(0)
 	image[mask] = 1.0
 	return image.astype('uint8')
 
