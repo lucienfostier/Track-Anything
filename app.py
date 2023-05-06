@@ -265,8 +265,16 @@ def vos_tracking_video(video_state, interactive_state, mask_dropdown):
         video_state["masks"][video_state["select_frame_number"]:] = masks
         video_state["logits"][video_state["select_frame_number"]:] = logits
         video_state["painted_images"][video_state["select_frame_number"]:] = painted_images
+    
+    
+    
 
     video_output = generate_video_from_frames(video_state["painted_images"], output_path="./result/track/{}".format(video_state["video_name"]), fps=fps) # import video_input to name the output video
+    for i, arr in enumerate(video_state["masks"]):
+        # Convert the 2D array to a PIL image
+        im = Image.fromarray((arr * 255).astype(np.uint8), mode='L')
+        # Save the image with a unique filename
+        im.save(f'/content/output/image_{i:0>4}.png')
     interactive_state["inference_times"] += 1
     
     print("For generating this tracking result, inference times: {}, click times: {}, positive: {}, negative: {}".format(interactive_state["inference_times"], 
