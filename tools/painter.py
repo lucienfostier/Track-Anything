@@ -107,8 +107,8 @@ def vis_add_mask(image, mask, color, alpha):
 	color = np.array(color_list[color])
 	mask = mask > 0.5
 	image[mask] = image[mask] * (1-alpha) + color * alpha
-	image.fill(0)
-	image[mask] = 1.0
+	#image.fill(0)
+	#image[mask] = 1.0
 	return image.astype('uint8')
 
 def point_painter(input_image, input_points, point_color=5, point_alpha=0.9, point_radius=15, contour_color=2, contour_width=5):
