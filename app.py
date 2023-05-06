@@ -20,6 +20,7 @@ try:
     from mmcv.cnn import ConvModule
 except:
     os.system("mim install mmcv")
+from PIL import Image
 
 # download checkpoints
 def download_checkpoint(url, folder, filename):
