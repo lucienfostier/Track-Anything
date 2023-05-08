@@ -86,9 +86,9 @@ def get_frames_from_video(video_input, video_state):
     operation_log = [("",""),("Upload video already. Try click the image for adding targets to track and inpaint.","Normal")]
     try:
         # Loop over image filenames
-        for filename in video_path:
+        for idx, file in enumerate(video_path):
             # Read image as numpy array
-            image_array = cv2.imread(filename)
+            image_array = cv2.imread(file.name)
 
             # Append image array to list
             frames.append(image_array)
