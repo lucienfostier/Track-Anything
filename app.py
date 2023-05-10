@@ -85,17 +85,21 @@ def get_frames_from_video(video_input, video_state):
     user_name = time.time()
     operation_log = [("",""),("Upload video already. Try click the image for adding targets to track and inpaint.","Normal")]
     try:
-        # Loop over image filenames
-        for idx, file in enumerate(video_path):
-            # Read image as numpy array
-            image_array = cv2.imread(file.name)
-
-            # Append image array to list
-            frames.append(image_array)
-
+        cap = cv2.VideoCapture(video_path)
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if ret == True:
+                current_memory_usage = psutil.virtual_memory().percent
+                frames.append(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                if current_memory_usage > 90:
+                    operation_log = [("Memory usage is too high (>90%). Stop the video extraction. Please reduce the video resolution or frame rate.", "Error")]
+                    print("Memory usage is too high (>90%). Please reduce the video resolution or frame rate.")
+                    break
+            else:
+                break
     except (OSError, TypeError, ValueError, KeyError, SyntaxError) as e:
         print("read_frame_source:{} error. {}\n".format(video_path, str(e)))
-        
     image_size = (frames[0].shape[0],frames[0].shape[1]) 
     # initialize video_state
     video_state = {
@@ -433,7 +437,7 @@ with gr.Blocks() as iface:
         # for user video input
         with gr.Column():
             with gr.Row(scale=0.4):
-                video_input = gr.File(file_count="multiple", file_types=[".jpg", ".png"])
+                video_input = gr.Video(autosize=True)
                 with gr.Column():
                     video_info = gr.Textbox(label="Video Info")
                     resize_info = gr.Textbox(value="If you want to use the inpaint function, it is best to git clone the repo and use a machine with more VRAM locally. \
